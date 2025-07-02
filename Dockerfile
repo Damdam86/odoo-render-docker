@@ -1,5 +1,4 @@
-FROM odoo:17.0-slim
-
+FROM  odoo:17
 USER root
 RUN apt-get update && apt-get install -y wkhtmltopdf
 
