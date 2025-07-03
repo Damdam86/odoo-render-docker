@@ -7,6 +7,5 @@ exec odoo \
   --db_port=5432 \
   --db_user=postgres \
   --db_password=Damdam86!? \
-  --db_name=postgres \
   -i base \
   --without-demo=all
