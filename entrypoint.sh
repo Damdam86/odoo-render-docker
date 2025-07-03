@@ -1,11 +1,11 @@
 #!/bin/bash
 
-echo "🚀 Starting Odoo with custom Supabase configuration..."
+echo "🚀 Starting Odoo with custom Render PostgreSQL config..."
 
 exec odoo \
-  --db_host=db.dkdrcflwmdkngitketzm.supabase.co \
-  --db_port=5432 \
-  --db_user=odoo_user \
-  --db_password=OdooSafe123! \
+  --db_host=${PGHOST} \
+  --db_port=${PGPORT} \
+  --db_user=${PGUSER} \
+  --db_password=${PGPASSWORD} \
   -i base \
   --without-demo=all
