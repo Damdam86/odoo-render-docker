@@ -1,9 +1,9 @@
 #!/bin/bash
 
-echo "⚙️ Installing Odoo base module..."
+echo "🚀 Starting Odoo with custom Render configuration..."
 
 exec odoo \
-  -d odoo_w4ch \
+  -d ${PGDATABASE} \
   --db_host=${PGHOST} \
   --db_port=${PGPORT} \
   --db_user=${PGUSER} \
