@@ -17,12 +17,12 @@ fi
 echo "🚀 Starting Odoo with SSL configuration..."
 
 exec odoo \
+  --config=/etc/odoo/odoo-ssl.conf \
   --db_host=${PGHOST} \
   --db_port=${PGPORT} \
   --db_user=${PGUSER} \
   --db_password=${PGPASSWORD} \
   --database=${PGDATABASE} \
-  --db_sslmode=require \
   -i base \
   --without-demo=all \
   --log-level=info \
