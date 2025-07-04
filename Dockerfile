@@ -2,19 +2,21 @@ FROM odoo:17
 
 USER root
 
+# Installer wkhtmltopdf et le client PostgreSQL
 RUN apt-get update && apt-get install -y \
     wkhtmltopdf \
     postgresql-client \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Copier le script d'entrée
 COPY entrypoint.sh /entrypoint.sh
-COPY odoo.conf /etc/odoo/odoo.conf
 RUN chmod +x /entrypoint.sh
 
-USER odoo
-
+# Préparer les dossiers nécessaires
 RUN mkdir -p /mnt/extra-addons /var/lib/odoo/sessions
+
+USER odoo
 
 EXPOSE 8069
 
