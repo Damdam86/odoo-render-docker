@@ -14,7 +14,8 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Préparer les dossiers nécessaires
-RUN mkdir -p /mnt/extra-addons /var/lib/odoo/sessions
+RUN mkdir -p /mnt/extra-addons /var/lib/odoo/sessions && \
+    chown -R odoo:odoo /mnt/extra-addons /var/lib/odoo/sessions
 
 USER odoo
 
