@@ -1,32 +1,34 @@
 #!/bin/bash
 echo "🚀 Starting Odoo with custom Render configuration..."
 
-# Attendre que la base de données soit disponible (avec timeout)
-echo "⏳ Waiting for database to be ready..."
-timeout=60
-counter=0
-until pg_isready -h ${PGHOST} -p ${PGPORT} -U ${PGUSER} || [ $counter -eq $timeout ]; do
-  echo "Database not ready, waiting... ($counter/$timeout)"
-  sleep 2
-  counter=$((counter + 1))
-done
+# Si vous avez DATABASE_URL (plus simple)
+if [ -n "$DATABASE_URL" ]; then
+    echo "✅ Using DATABASE_URL"
+    exec odoo \
+      --db_url="$DATABASE_URL" \
+      -i base \
+      --without-demo=all \
+      --log-level=info \
+      --http-port=8069 \
+      --http-interface=0.0.0.0
+else
+    # Sinon utiliser les variables séparées
+    echo "⏳ Waiting for database to be ready..."
+    until pg_isready -h ${PGHOST} -p ${PGPORT} -U ${PGUSER}; do
+      echo "Database not ready, waiting..."
+      sleep 2
+    done
 
-if [ $counter -eq $timeout ]; then
-  echo "❌ Database connection timeout. Check your PostgreSQL service."
-  exit 1
+    echo "✅ Database is ready!"
+    exec odoo \
+      --db_host=${PGHOST} \
+      --db_port=${PGPORT} \
+      --db_user=${PGUSER} \
+      --db_password=${PGPASSWORD} \
+      --database=${PGDATABASE} \
+      -i base \
+      --without-demo=all \
+      --log-level=info \
+      --http-port=8069 \
+      --http-interface=0.0.0.0
 fi
-
-echo "✅ Database is ready!"
-
-# Démarrer Odoo avec exposition du port
-exec odoo \
-  --db_host=${PGHOST} \
-  --db_port=${PGPORT} \
-  --db_user=${PGUSER} \
-  --db_password=${PGPASSWORD} \
-  --database=${PGDATABASE} \
-  -i base \
-  --without-demo=all \
-  --log-level=info \
-  --http-port=8069 \
-  --http-interface=0.0.0.0
