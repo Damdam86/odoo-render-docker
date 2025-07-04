@@ -18,10 +18,7 @@ fi
 export PGSSLMODE=require
 
 exec odoo \
-  --db_host="$PGHOST" \
-  --db_port="$PGPORT" \
-  --db_user="$PGUSER" \
-  --db_password="$PGPASSWORD" \
+  --db_uri="postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}?sslmode=require" \
   --log-level=debug \
   --http-port=8069 \
   --http-interface=0.0.0.0
