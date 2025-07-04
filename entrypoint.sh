@@ -1,12 +1,13 @@
 #!/bin/bash
 set -e
 
-# Première initialisation si la base est vide
+# Vérifie si Odoo a déjà été initialisé
 if [ ! -f "/etc/odoo/.initialized" ]; then
-    echo "🔧 Initialisation de Odoo avec tous les modules..."
-    /usr/bin/odoo -i all --without-demo=all
+    echo "🔧 Initialisation de Odoo avec le module 'base'..."
+    /usr/bin/odoo -i base --without-demo=all --no-xmlrpc --stop-after-init
     touch /etc/odoo/.initialized
-else
-    echo "🚀 Lancement standard de Odoo"
-    /usr/bin/odoo
 fi
+
+# Lancement normal d'Odoo
+echo "🚀 Lancement standard de Odoo"
+/usr/bin/odoo
