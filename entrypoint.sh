@@ -14,7 +14,7 @@ if [ -z "$PGHOST" ] || [ -z "$PGPORT" ] || [ -z "$PGUSER" ] || [ -z "$PGPASSWORD
     exit 1
 fi
 
-echo "🚀 Starting Odoo..."
+echo "🚀 Starting Odoo with SSL configuration..."
 
 exec odoo \
   --db_host=${PGHOST} \
@@ -22,6 +22,7 @@ exec odoo \
   --db_user=${PGUSER} \
   --db_password=${PGPASSWORD} \
   --database=${PGDATABASE} \
+  --db_sslmode=require \
   -i base \
   --without-demo=all \
   --log-level=info \
