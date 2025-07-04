@@ -1,15 +1,14 @@
 #!/bin/bash
 set -e
 
-INIT_FILE="/var/lib/odoo/.initialized"
+INIT_MARKER="/var/lib/odoo/.initialized"
 
-# Vérifie si Odoo a déjà été initialisé
-if [ ! -f "$INIT_FILE" ]; then
+if [ ! -f "$INIT_MARKER" ]; then
     echo "🔧 Initialisation de Odoo avec le module 'base'..."
-    /usr/bin/odoo -i base --without-demo=all --no-xmlrpc --stop-after-init
-    touch "$INIT_FILE"
+    /usr/bin/odoo -i base --without-demo=all --stop-after-init
+    echo "✅ Initialisation terminée"
+    touch "$INIT_MARKER"
 fi
 
-# Lancement normal d'Odoo
 echo "🚀 Lancement standard de Odoo"
 /usr/bin/odoo
