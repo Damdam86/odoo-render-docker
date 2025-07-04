@@ -29,7 +29,6 @@ echo "DSN: ${DSN}"
 
 # Démarrer Odoo en spécifiant explicitement le DSN
 exec odoo \
-  --db_template=template0 \
   -d ${PGDATABASE} \
   --without-demo=all \
   --log-level=debug \
