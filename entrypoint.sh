@@ -14,15 +14,17 @@ if [ -z "$PGHOST" ] || [ -z "$PGPORT" ] || [ -z "$PGUSER" ] || [ -z "$PGPASSWORD
     exit 1
 fi
 
-echo "🚀 Starting Odoo with SSL configuration..."
+# Configurer SSL via variables d'environnement PostgreSQL
+export PGSSLMODE=require
+export PGSSLCERT=""
+export PGSSLKEY=""
+export PGSSLROOTCERT=""
 
+echo "🚀 Starting Odoo with PostgreSQL SSL environment variables..."
+
+# Utiliser directement les variables d'environnement au lieu des paramètres --db_*
 exec odoo \
-  --config=/etc/odoo/odoo-ssl.conf \
-  --db_host=${PGHOST} \
-  --db_port=${PGPORT} \
-  --db_user=${PGUSER} \
-  --db_password=${PGPASSWORD} \
-  --database=${PGDATABASE} \
+  -d ${PGDATABASE} \
   -i base \
   --without-demo=all \
   --log-level=info \
