@@ -10,23 +10,28 @@ echo "Database: $PGDATABASE"
 # Vérifier que les variables sont définies
 if [ -z "$PGHOST" ] || [ -z "$PGPORT" ] || [ -z "$PGUSER" ] || [ -z "$PGPASSWORD" ] || [ -z "$PGDATABASE" ]; then
     echo "❌ Missing database environment variables!"
-    echo "Required: PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE"
     exit 1
 fi
 
-# TEST SANS SSL (temporaire)
-export PGSSLMODE=disable
+# Forcer SSL avec paramètres spécifiques pour Render
+export PGSSLMODE=require
+export PGSSLCERT=""
+export PGSSLKEY=""
+export PGSSLROOTCERT=""
+export PGSSLCRL=""
 
-echo "🚀 Testing Odoo WITHOUT SSL..."
+echo "🚀 Starting Odoo with FORCED SSL configuration..."
 
+# Nouvelle approche : créer un DSN complet
+DSN="host=${PGHOST} port=${PGPORT} user=${PGUSER} password=${PGPASSWORD} dbname=${PGDATABASE} sslmode=require"
+
+echo "DSN: ${DSN}"
+
+# Démarrer Odoo en spécifiant explicitement le DSN
 exec odoo \
-  --db_host=${PGHOST} \
-  --db_port=${PGPORT} \
-  --db_user=${PGUSER} \
-  --db_password=${PGPASSWORD} \
-  --database=${PGDATABASE} \
-  -i base \
+  --db_template=template0 \
+  -d ${PGDATABASE} \
   --without-demo=all \
-  --log-level=info \
+  --log-level=debug \
   --http-port=8069 \
   --http-interface=0.0.0.0
