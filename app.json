@@ -1,0 +1,41 @@
+{
+  "name": "Odoo CRM",
+  "description": "Odoo CRM 17 avec PostgreSQL",
+  "repository": "https://github.com/votre-username/odoo-crm",
+  "logo": "https://www.odoo.com/web/image/website/1/logo/Odoo?unique=689cb34",
+  "keywords": ["odoo", "crm", "erp", "python", "postgresql"],
+  "success_url": "/",
+  "stack": "container",
+  "addons": [
+    {
+      "plan": "heroku-postgresql:essential-0",
+      "as": "DATABASE"
+    }
+  ],
+  "env": {
+    "PORT": {
+      "description": "Port d'écoute d'Odoo",
+      "value": "8069"
+    },
+    "ADMIN_PASSWORD": {
+      "description": "Mot de passe administrateur Odoo",
+      "generator": "secret"
+    },
+    "WEB_CONCURRENCY": {
+      "description": "Nombre de workers",
+      "value": "1"
+    },
+    "ODOO_RC": {
+      "description": "Fichier de configuration Odoo",
+      "value": "/etc/odoo/odoo.conf"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "image": "heroku/heroku:20-build",
+  "stack": "heroku-20"
+}
