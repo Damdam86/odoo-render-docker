@@ -1,0 +1,55 @@
+databases:
+  - name: odoo-postgres
+    databaseName: odoo
+    user: odoo
+    region: frankfurt
+    plan: free
+
+services:
+  - type: web
+    name: odoo-crm
+    runtime: docker
+    repo: https://github.com/Damdam86/odoo-render-docker
+    branch: cursor/d-ployer-le-crm-odoo-1ac7
+    region: frankfurt
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./
+    numInstances: 1
+    
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: odoo-postgres
+          property: connectionString
+      - key: DB_HOST
+        fromDatabase:
+          name: odoo-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: odoo-postgres
+          property: port
+      - key: DB_USER
+        fromDatabase:
+          name: odoo-postgres
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: odoo-postgres
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: odoo-postgres
+          property: database
+      - key: ADMIN_PASSWORD
+        value: admin123
+      - key: PORT
+        value: 8069
+    
+    healthCheckPath: /web/health
+    
+    buildCommand: ""
+    startCommand: ""
+    
+    autoDeploy: true
