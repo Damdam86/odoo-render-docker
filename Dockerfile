@@ -21,4 +21,4 @@ USER odoo
 
 EXPOSE 8069
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint-fix.sh"]
