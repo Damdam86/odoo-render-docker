@@ -2,39 +2,31 @@ FROM odoo:17
 
 USER root
 
-# Installer les dépendances nécessaires + outils de debug
+# Installer PostgreSQL client seulement
 RUN apt-get update && apt-get install -y \
-    wkhtmltopdf \
     postgresql-client \
-    netstat-nat \
-    lsof \
-    iproute2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Copier tous les scripts
-COPY entrypoint.sh /entrypoint.sh
-COPY entrypoint-fix.sh /entrypoint-fix.sh
-COPY entrypoint-simple.sh /entrypoint-simple.sh
-COPY test-port.sh /test-port.sh
+# Copier le script de démarrage direct
+COPY start-odoo.sh /start-odoo.sh
 COPY odoo.conf /etc/odoo/odoo.conf
 
-# Rendre tous les scripts exécutables
-RUN chmod +x /entrypoint.sh /entrypoint-fix.sh /entrypoint-simple.sh /test-port.sh
+# Rendre le script exécutable
+RUN chmod +x /start-odoo.sh
 
-# Créer les dossiers nécessaires avec bonnes permissions
-RUN mkdir -p /mnt/extra-addons /var/lib/odoo/sessions /tmp/odoo_sessions \
-    && chown -R odoo:odoo /var/lib/odoo /mnt/extra-addons /tmp/odoo_sessions
+# Créer les dossiers
+RUN mkdir -p /mnt/extra-addons /var/lib/odoo/sessions \
+    && chown -R odoo:odoo /var/lib/odoo /mnt/extra-addons
 
 USER odoo
 
-# Exposer le port explicitement
+# Port explicite
 EXPOSE 8069
 
-# Variables d'environnement critiques pour Render
+# Variables critiques
 ENV PORT=8069
-ENV ODOO_RC=/etc/odoo/odoo.conf
 ENV PYTHONUNBUFFERED=1
 
-# Utiliser le script simple ultra-robuste
-ENTRYPOINT ["/entrypoint-simple.sh"]
+# Script direct et simple
+ENTRYPOINT ["/start-odoo.sh"]
