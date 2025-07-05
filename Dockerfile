@@ -2,31 +2,21 @@ FROM odoo:17
 
 USER root
 
-# Installer PostgreSQL client seulement
-RUN apt-get update && apt-get install -y \
-    postgresql-client \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Installer seulement postgresql-client
+RUN apt-get update && apt-get install -y postgresql-client && apt-get clean
 
-# Copier le script de démarrage direct
-COPY start-odoo.sh /start-odoo.sh
-COPY odoo.conf /etc/odoo/odoo.conf
-
-# Rendre le script exécutable
-RUN chmod +x /start-odoo.sh
-
-# Créer les dossiers
-RUN mkdir -p /mnt/extra-addons /var/lib/odoo/sessions \
-    && chown -R odoo:odoo /var/lib/odoo /mnt/extra-addons
+# Copier le serveur de test
+COPY test-server.py /test-server.py
+RUN chmod +x /test-server.py
 
 USER odoo
 
 # Port explicite
 EXPOSE 8069
 
-# Variables critiques
+# Variables
 ENV PORT=8069
 ENV PYTHONUNBUFFERED=1
 
-# Script direct et simple
-ENTRYPOINT ["/start-odoo.sh"]
+# SERVEUR DE TEST POUR VÉRIFIER LE PORT
+ENTRYPOINT ["python3", "/test-server.py"]
