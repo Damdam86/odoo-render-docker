@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Service PostgreSQL
+  postgres:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=odoo
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Service Odoo CRM
+  odoo:
+    image: odoo:17
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - HOST=postgres
+      - USER=odoo
+      - PASSWORD=odoo_password
+    volumes:
+      - odoo_data:/var/lib/odoo
+      - ./addons:/mnt/extra-addons
+      - ./config:/etc/odoo
+    ports:
+      - "8069:8069"
+    restart: unless-stopped
+    command: >
+      bash -c "
+        while ! pg_isready -h postgres -U odoo > /dev/null 2>&1; do
+          echo 'Waiting for PostgreSQL...'
+          sleep 2
+        done
+        echo 'PostgreSQL is ready!'
+        odoo -d odoo -i base --without-demo=all --stop-after-init || true
+        echo 'Starting Odoo...'
+        odoo -d odoo
+      "
+
+volumes:
+  postgres_data:
+  odoo_data:
