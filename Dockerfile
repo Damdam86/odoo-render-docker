@@ -2,21 +2,21 @@ FROM odoo:17
 
 USER root
 
-# Installer seulement postgresql-client
+# Installer postgresql-client
 RUN apt-get update && apt-get install -y postgresql-client && apt-get clean
 
-# Copier le serveur de test
-COPY test-server.py /test-server.py
-RUN chmod +x /test-server.py
+# Copier le script Odoo minimal
+COPY minimal-start.sh /minimal-start.sh
+RUN chmod +x /minimal-start.sh
 
 USER odoo
 
-# Port explicite
+# Port explicite (TESTÉ ET VALIDÉ)
 EXPOSE 8069
 
-# Variables
+# Variables exactes du test qui fonctionne
 ENV PORT=8069
 ENV PYTHONUNBUFFERED=1
 
-# SERVEUR DE TEST POUR VÉRIFIER LE PORT
-ENTRYPOINT ["python3", "/test-server.py"]
+# Script Odoo avec paramètres réseau identiques au test
+ENTRYPOINT ["/minimal-start.sh"]

@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 
-echo "🚀 MINIMAL START - PORT 8069 IMMÉDIAT"
+echo "🚀 ODOO MINIMAL - PARAMÈTRES RÉSEAU TESTÉS ✅"
+echo "🌐 Interface: 0.0.0.0:8069 (VALIDÉ PAR LE TEST)"
 
-# Pas d'attente PostgreSQL, pas de vérification, juste démarrer !
-echo "⚡ DÉMARRAGE IMMÉDIAT ODOO"
+# Démarrage IMMÉDIAT avec paramètres réseau IDENTIQUES au test qui fonctionne
+echo "⚡ DÉMARRAGE ODOO - MÊMES PARAMÈTRES QUE LE TEST"
 
-# Démarrage direct avec paramètres minimaux
 exec /usr/bin/odoo \
     --http-interface=0.0.0.0 \
     --http-port=8069 \
